@@ -1,4 +1,4 @@
-package com.iulian.iancu.cocktailapp
+package com.iulian.iancu.cocktailapp.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
