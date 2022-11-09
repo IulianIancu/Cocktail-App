@@ -1,21 +1,25 @@
 package com.iulian.iancu.cocktailapp.ui.main
 
+import android.accounts.NetworkErrorException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.iulian.iancu.cocktailapp.data.Drinks
-import com.iulian.iancu.cocktailapp.data.DrinksRepository
+import com.iulian.iancu.domain.GetDrinksUseCase
+import com.iulian.iancu.entity.Cocktail
 import kotlinx.coroutines.*
 
 class MainViewModel constructor(
     //TODO Inject with dagger instead of this nonsense
-    private val drinksRepository: DrinksRepository
+    private val getDrinksUseCase: GetDrinksUseCase
 ) : ViewModel() {
     private val _state = MutableLiveData(State(null, null))
     val state: LiveData<State> get() = _state
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
-        _state.postValue(_state.value?.copy(error = Error.Unknown))
+    private val exceptionHandler = CoroutineExceptionHandler { _, error ->
+        if (error is NetworkErrorException)
+            _state.postValue(_state.value?.copy(error = Error.Network))
+        else
+            _state.postValue(_state.value?.copy(error = Error.Unknown))
     }
     private var job: Job? = null
 
@@ -27,20 +31,15 @@ class MainViewModel constructor(
 
     fun getDrinks() {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = drinksRepository.getDrinks()
+            val response = getDrinksUseCase()
 
             withContext(Dispatchers.Main) {
-                if (response.isSuccessful && !response.body()?.drinks.isNullOrEmpty()) {
-                    val drinks = response.body()
-                    _state.postValue(
-                        _state.value?.copy(
-                            error = null,
-                            drinks = drinks
-                        )
+                _state.postValue(
+                    _state.value?.copy(
+                        error = null,
+                        drinks = response
                     )
-                } else {
-                    _state.postValue(_state.value?.copy(error = Error.Network))
-                }
+                )
             }
         }
     }
@@ -49,7 +48,7 @@ class MainViewModel constructor(
 
 data class State(
     val error: Error?,
-    val drinks: Drinks?
+    val drinks: List<Cocktail>?
 )
 
 sealed class Error {

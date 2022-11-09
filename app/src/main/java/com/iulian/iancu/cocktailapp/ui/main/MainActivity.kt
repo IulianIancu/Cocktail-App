@@ -28,14 +28,15 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.iulian.iancu.cocktailapp.R
-import com.iulian.iancu.cocktailapp.data.Drinks
-import com.iulian.iancu.cocktailapp.data.DrinksRepository
-import com.iulian.iancu.cocktailapp.data.DrinksService
 import com.iulian.iancu.cocktailapp.ui.theme.CocktailAppTheme
+import com.iulian.iancu.data.DrinksRepositoryImpl
+import com.iulian.iancu.data.DrinksService
+import com.iulian.iancu.domain.GetDrinksUseCase
+import com.iulian.iancu.entity.Cocktail
 
 class MainActivity : ComponentActivity() {
     private lateinit var viewModel: MainViewModel
-    var drinks = Drinks(emptyList())
+    private var drinks = emptyList<Cocktail>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,12 @@ class MainActivity : ComponentActivity() {
             this,
             //TODO This should be replaced with some sort of DI (Dagger)
             MainViewModelFactory(
-                DrinksRepository(DrinksService.getInstance())
+                GetDrinksUseCase(
+                    DrinksRepositoryImpl(
+                        DrinksService.getInstance()
+                    )
+                )
+
             )
         )[MainViewModel::class.java]
 
@@ -59,9 +65,9 @@ class MainActivity : ComponentActivity() {
         if (state == null) return
         when (state.error) {
             Error.Network ->
-                Toast.makeText(this, "string.network_error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.error_network, Toast.LENGTH_SHORT).show()
             Error.Unknown ->
-                Toast.makeText(this, "string.unknown_error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.error_unknown, Toast.LENGTH_SHORT).show()
             else -> {
                 //TODO maybe some analytics
             }
@@ -97,7 +103,7 @@ class MainActivity : ComponentActivity() {
                         vertical = 8.dp
                     )
                 ) {
-                    items(drinks.drinks) {
+                    items(drinks) {
                         Card(
                             shape = RoundedCornerShape(8.dp),
                             modifier = Modifier
@@ -118,15 +124,15 @@ class MainActivity : ComponentActivity() {
                                             .fillMaxWidth()
                                             .padding(4.dp),
                                         placeholder = painterResource(R.drawable.ic_baseline_emoji_emotions_24),
-                                        model = it.strDrinkThumb,
+                                        model = it.image,
                                         contentDescription = null,
                                         alignment = Alignment.Center,
                                         imageLoader = imageLoader
                                     )
-                                    Text(text = it.strDrink, Modifier.padding(4.dp))
+                                    Text(text = it.name, Modifier.padding(4.dp))
                                     if (openDialog.value) {
                                         Text(
-                                            text = it.strInstructions ?: "",
+                                            text = it.instructions,
                                             Modifier.padding(4.dp)
                                         )
                                     }

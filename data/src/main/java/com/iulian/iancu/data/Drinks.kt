@@ -1,4 +1,4 @@
-package com.iulian.iancu.cocktailapp.data
+package com.iulian.iancu.data
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
