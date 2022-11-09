@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,26 +34,15 @@ import com.iulian.iancu.data.DrinksRepositoryImpl
 import com.iulian.iancu.data.DrinksService
 import com.iulian.iancu.domain.GetDrinksUseCase
 import com.iulian.iancu.entity.Cocktail
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
     private var drinks = emptyList<Cocktail>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(
-            this,
-            //TODO This should be replaced with some sort of DI (Dagger)
-            MainViewModelFactory(
-                GetDrinksUseCase(
-                    DrinksRepositoryImpl(
-                        DrinksService.getInstance()
-                    )
-                )
-
-            )
-        )[MainViewModel::class.java]
 
         viewModel.state.observe(this, ::onStateChange)
         setContent {

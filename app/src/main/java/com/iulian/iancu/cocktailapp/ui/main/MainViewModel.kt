@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.iulian.iancu.domain.GetDrinksUseCase
 import com.iulian.iancu.entity.Cocktail
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class MainViewModel constructor(
-    //TODO Inject with dagger instead of this nonsense
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val getDrinksUseCase: GetDrinksUseCase
 ) : ViewModel() {
     private val _state = MutableLiveData(State(null, null))
