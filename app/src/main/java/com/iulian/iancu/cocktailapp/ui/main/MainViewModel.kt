@@ -3,8 +3,8 @@ package com.iulian.iancu.cocktailapp.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.iulian.iancu.cocktailapp.data.Drinks
-import com.iulian.iancu.cocktailapp.data.DrinksRepository
+import com.iulian.iancu.data.Drinks
+import com.iulian.iancu.data.DrinksRepository
 import kotlinx.coroutines.*
 
 class MainViewModel constructor(

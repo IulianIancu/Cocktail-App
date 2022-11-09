@@ -28,10 +28,10 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.iulian.iancu.cocktailapp.R
-import com.iulian.iancu.cocktailapp.data.Drinks
-import com.iulian.iancu.cocktailapp.data.DrinksRepository
-import com.iulian.iancu.cocktailapp.data.DrinksService
 import com.iulian.iancu.cocktailapp.ui.theme.CocktailAppTheme
+import com.iulian.iancu.data.Drinks
+import com.iulian.iancu.data.DrinksRepository
+import com.iulian.iancu.data.DrinksService
 
 class MainActivity : ComponentActivity() {
     private lateinit var viewModel: MainViewModel

@@ -1,4 +1,4 @@
-package com.iulian.iancu.cocktailapp.data
+package com.iulian.iancu.data
 
 import retrofit2.Response
 import retrofit2.Retrofit

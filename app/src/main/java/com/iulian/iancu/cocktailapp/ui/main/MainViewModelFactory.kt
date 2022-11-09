@@ -2,7 +2,7 @@ package com.iulian.iancu.cocktailapp.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.iulian.iancu.cocktailapp.data.DrinksRepository
+import com.iulian.iancu.data.DrinksRepository
 
 class MainViewModelFactory(
     private val drinksRepository: DrinksRepository
