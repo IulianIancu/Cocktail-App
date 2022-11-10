@@ -31,9 +31,9 @@ class MainViewModel @Inject constructor(
         job?.cancel()
     }
 
-    fun getDrinks() {
+    fun getDrinks(search: String = "") {
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = getDrinksUseCase()
+            val response = getDrinksUseCase(search)
 
             withContext(Dispatchers.Main) {
                 _state.postValue(

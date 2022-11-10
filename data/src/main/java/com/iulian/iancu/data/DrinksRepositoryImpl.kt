@@ -6,8 +6,8 @@ import com.iulian.iancu.entity.Cocktail
 
 class DrinksRepositoryImpl constructor(private val retrofitService: DrinksService) :
     DrinksRepository {
-    override suspend fun getDrinks(): List<Cocktail> {
-        val result = retrofitService.getDrinks()
+    override suspend fun getDrinks(search:String): List<Cocktail> {
+        val result = retrofitService.getDrinks(search)
         if (result.isSuccessful && !result.body()?.drinks.isNullOrEmpty()) {
             val cocktails = result.body()!!.drinks.map {
                 Cocktail(
