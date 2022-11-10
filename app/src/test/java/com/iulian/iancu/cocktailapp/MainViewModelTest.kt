@@ -20,7 +20,6 @@ import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
@@ -30,7 +29,7 @@ import retrofit2.Response
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+class MainViewModelTest {
     private lateinit var viewModel: MainViewModel
     private lateinit var getDrinksUseCase: GetDrinksUseCase
     private lateinit var drinksRepository: DrinksRepositoryImpl
