@@ -22,17 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.iulian.iancu.cocktailapp.R
 import com.iulian.iancu.cocktailapp.ui.theme.CocktailAppTheme
-import com.iulian.iancu.data.DrinksRepositoryImpl
-import com.iulian.iancu.data.DrinksService
-import com.iulian.iancu.domain.GetDrinksUseCase
 import com.iulian.iancu.entity.Cocktail
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -125,6 +122,23 @@ class MainActivity : ComponentActivity() {
                                             text = it.instructions,
                                             Modifier.padding(4.dp)
                                         )
+
+                                        LazyColumn(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(Dp(220f)),
+                                            contentPadding = PaddingValues(
+                                                horizontal = 16.dp,
+                                                vertical = 8.dp
+                                            )
+                                        ) {
+                                            items(it.ingredients) { item ->
+                                                Text(
+                                                    text = "${item.first} ${item.second}",
+                                                    Modifier.padding(4.dp)
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
