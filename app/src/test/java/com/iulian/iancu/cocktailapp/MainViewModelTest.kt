@@ -2,6 +2,7 @@
 
 package com.iulian.iancu.cocktailapp
 
+import com.iulian.iancu.cocktailapp.ui.main.Error.*
 import com.iulian.iancu.cocktailapp.ui.main.MainViewModel
 import com.iulian.iancu.data.Drink
 import com.iulian.iancu.data.Drinks
@@ -19,6 +20,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okhttp3.MediaType
+import okhttp3.ResponseBody
+import okio.BufferedSource
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -58,18 +62,65 @@ class MainViewModelTest {
         )
 
         val testResult = Cocktail("1","1","1","", emptyList())
-        coEvery { drinksService.getDrinks("") } returns Response.success(
-            Drinks(
-                listOf(
-                    testDrink
-                )
-            )
-        )
+        coEvery { drinksService.getDrinks("") } returns Response.success(Drinks(listOf(testDrink)))
 
         val result = getDrinksUseCase("")
         coVerify { drinksRepository.getDrinks("") }
         coVerify { drinksService.getDrinks("") }
 
         Assert.assertEquals(testResult,result)
+    }
+
+    @Test
+    fun givenSearchIsPopulatedAndCallSucceeds_usecaseGivesCorrectList() = runTest {
+        val testDrink = Drink(
+            idDrink = "2",
+            strDrink = "2",
+            strDrinkThumb = "2",
+            null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+        )
+
+        val testResult = Cocktail("2","2","2","", emptyList())
+        coEvery { drinksService.getDrinks("") } returns Response.success(Drinks(listOf(testDrink)))
+        val result = getDrinksUseCase("Margarita")
+        coVerify { drinksRepository.getDrinks("Margarita") }
+        coVerify { drinksService.getDrinks("Margarita") }
+
+        Assert.assertEquals(testResult,result)
+    }
+
+    @Test
+    fun givenSearchIsPopulatedAndCallFails_ViewModelStateBecomesError() = runTest {
+        coEvery { drinksService.getDrinks("") } returns Response.error(404, fakeError)
+        viewModel.getDrinks("Margerita")
+        coVerify { drinksRepository.getDrinks("Margerita") }
+        coVerify { drinksService.getDrinks("Margerita") }
+
+        Assert.assertEquals(Unknown,viewModel.state.value?.error)
+    }
+
+    @Test
+    fun givenSearchIsPopulatedAndCallFailsNoDrinks_ViewModelStateBecomesError() = runTest {
+
+        coEvery { drinksService.getDrinks("") } returns Response.success(Drinks(emptyList()))
+        viewModel.getDrinks("Margerita")
+        coVerify { drinksRepository.getDrinks("Margerita") }
+        coVerify { drinksService.getDrinks("Margerita") }
+
+        Assert.assertEquals(Network,viewModel.state.value?.error)
+    }
+
+    object fakeError :ResponseBody() {
+        override fun contentLength(): Long {
+            TODO("Not yet implemented")
+        }
+
+        override fun contentType(): MediaType? {
+            TODO("Not yet implemented")
+        }
+
+        override fun source(): BufferedSource {
+            TODO("Not yet implemented")
+        }
     }
 }
