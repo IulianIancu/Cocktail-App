@@ -23,6 +23,7 @@ class MainViewModel @Inject constructor(
         else
             _state.postValue(_state.value?.copy(error = Error.Unknown))
     }
+
     private var job: Job? = null
 
 
@@ -32,6 +33,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun getDrinks(search: String = "") {
+        //Move job creation out of here, have it as a parameter to be injected for better maintainability
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val response = getDrinksUseCase(search)
 
